@@ -7,14 +7,17 @@ const matches = fs
 	.split('\n')
 	.map((row: string): string[] => {
 		return row.split(',');
-	});
+  });
+
+const homeWin = 'H';
+const awayWin = 'A';
 
 let checlseaWins: number = 0;
 
 for (let match of matches) {
-	if (match[1] === 'Chelsea' && match[5] === 'H') {
+	if (match[1] === 'Chelsea' && match[5] === homeWin) {
 		checlseaWins += 1;
-	} else if (match[2] === 'Chelsea' && match[5] === 'A') {
+	} else if (match[2] === 'Chelsea' && match[5] === awayWin) {
 		checlseaWins += 1;
 	}
 }
