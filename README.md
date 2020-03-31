@@ -4,7 +4,7 @@ A NodeJS + Typescript project to read, parse, analyse and make a report of a csv
 
 Not sure yet if the report will be presented on a UI but we'll find out.
 
-## First method
+## First method - The Not So Good Approach
 
 A naive approach is first employed and we consoled the number of matches (both
 **Home** and **Away**) won by Chelsea FC in the season.
@@ -72,3 +72,32 @@ enum MatchResults {
 For a match result there could only be three (3) outcomes - `win`, `lose` or `draw`. Or in our case, in terms of teams, there could be an `Home win`, `Away win` or a `Draw`.
 
 This helps us prevent lost of data context which is a much better improvement.
+
+## Second Method - A Better Approach
+
+If we look at the status of our `index.ts` file closely, we'll notice our `csv` file is hardcoded and the method of reading from the file as well.
+
+If we decide to get the data from within the `csv` file from an external source, say an API, we may have to delete about half of our hard-labored written code.
+
+A quick solution to this is to extract the logic for reading the file into its own class say `CSVFIleReader` and then allow it to take any `csv` file.
+
+Something in the line:
+
+```ts
+...
+const reader = new CsvFileReader('epl_2018_19.csv');
+...
+```
+
+and create it with some method, `read()` for reading into the `csv` file and then populating a some `data` variable for consumption.
+
+```ts
+...
+const reader = new CsvFileReader('epl_2018_19.csv');
+reader.read();
+...
+```
+
+That's what this section of the commit does.
+
+With this improvement, if we decide to use an external data, we could only comment out/delete just `2 lines of code` to implement an external query.
