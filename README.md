@@ -52,3 +52,23 @@ But we won't be using it anywhere in our code.
 If we are not using it, why keep it? This is what would pop in the mind of some that comes later to the code base and most probably delete it.
 
 This method is a bit worrying so we'll need to dig deeper for a much better one.
+
+### Yet another improvement
+
+So to avoid lost of data context, we employ the use of `enum` in Typescript.
+
+`enum` is an _enumeration_. It's much close to objects in Javascript but it's a closely related dataset.
+
+```ts
+...
+enum MatchResults {
+  HomeWin = 'H',
+  AwayWin = 'A',
+  Draw = 'D'
+}
+...
+```
+
+For a match result there could only be three (3) outcomes - `win`, `lose` or `draw`. Or in our case, in terms of teams, there could be an `Home win`, `Away win` or a `Draw`.
+
+This helps us prevent lost of data context which is a much better improvement.

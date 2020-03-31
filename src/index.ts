@@ -9,15 +9,18 @@ const matches = fs
 		return row.split(',');
   });
 
-const homeWin = 'H';
-const awayWin = 'A';
+enum MatchResults {
+  HomeWin = 'H',
+  AwayWin = 'A',
+  Draw = 'D'
+}
 
 let checlseaWins: number = 0;
 
 for (let match of matches) {
-	if (match[1] === 'Chelsea' && match[5] === homeWin) {
+	if (match[1] === 'Chelsea' && match[5] === MatchResults.HomeWin) {
 		checlseaWins += 1;
-	} else if (match[2] === 'Chelsea' && match[5] === awayWin) {
+	} else if (match[2] === 'Chelsea' && match[5] === MatchResults.AwayWin) {
 		checlseaWins += 1;
 	}
 }
