@@ -1,8 +1,7 @@
-import { CsvFileReader } from './CsvFileReader';
 import { MatchResults } from './matchResult';
+import { MatchReader } from './MatchReader';
 
-const reader = new CsvFileReader('epl_2018_19.csv');
-reader.read();
+const reader = new MatchReader('epl_2018_19');
 
 let checlseaWins: number = 0;
 

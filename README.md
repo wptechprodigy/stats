@@ -168,3 +168,53 @@ What we could do is to make `CsvFileReader` into an **abstract class** with a me
 This means `CsvFileReader` will not need to worry about that part of the implementation again! Ooops! Better. Think we are getting somewhere.
 
 Let's work on that.
+
+```ts
+...
+type MatchData = [
+  Date,
+  string,
+  string,
+  number,
+  number,
+  MatchResults,
+  string
+]
+
+export abstract class CsvFileReader {
+  data: MatchData[] = [];
+
+  constructor(public filename: string) {}
+
+  abstract mapRow(row: string[]): MatchData;
+
+  read(): void {
+    this.data = fs
+			.readFileSync(this.filename, {
+				encoding: 'utf-8',
+			})
+			.split('\n')
+			.map((row: string): string[] => {
+				return row.split(',');
+      })
+      .map(this.mapRow);
+  }
+}
+
+```
+
+After the modification and extract of the `mapRow` method into its own class that extends the abstract `CsvFileReader`, we've done a great deal of work and could stay at this...
+
+### But, there's another problem
+
+If you take a close look at the abstract `CsvFileReader` you will notice the type annottation of data is `MatchData[]` which makes the class not so reusable.
+
+Why?
+
+If we want to say read a data of Movies for instance, you'd agree the `tuple` `MatchData` will not be a match for the type. The structure of the data will definitely be different.
+
+This makes it a big need for us to look for a way to represent data type a type in Typescript called `Generics`.
+
+We need to implement this to make `CsvFileReader` really **REUSABLE**.
+
+Let's get to work.
