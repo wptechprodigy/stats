@@ -2,6 +2,7 @@ import { CsvFileReader } from "./CsvFileReader";
 import { MatchResults } from "./matchResult";
 import { dateStringToDate } from "./utils";
 
+// Data context based on file
 type MatchData = [
   Date,
   string,
