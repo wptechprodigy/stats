@@ -1,7 +1,8 @@
 import { MatchResults } from './matchResult';
 import { MatchReader } from './MatchReader';
 
-const reader = new MatchReader('epl_2018_19');
+const reader = new MatchReader('epl_2018_19.csv');
+reader.read();
 
 let checlseaWins: number = 0;
 

@@ -2,7 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var matchResult_1 = require("./matchResult");
 var MatchReader_1 = require("./MatchReader");
-var reader = new MatchReader_1.MatchReader('epl_2018_19');
+var reader = new MatchReader_1.MatchReader('epl_2018_19.csv');
+reader.read();
 var checlseaWins = 0;
 for (var _i = 0, _a = reader.data; _i < _a.length; _i++) {
     var match = _a[_i];

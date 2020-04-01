@@ -218,3 +218,36 @@ This makes it a big need for us to look for a way to represent data type a type 
 We need to implement this to make `CsvFileReader` really **REUSABLE**.
 
 Let's get to work.
+
+### After using Generics
+
+Now we have a fully **reusable** `CsvFileReader` class.
+
+So, when making any form of `Reader` like `MatchReader` in this scenario...we need then provide the kind of data context we intend to pass into `CsvFileReader` when extending it in such `Reader`.
+
+`CsvFileReader` class now holds the status below 👇👇👇
+
+```ts
+import fs from 'fs';
+
+export abstract class CsvFileReader<T> {
+  data: T[] = [];
+
+  constructor(public filename: string) {}
+
+  abstract mapRow(row: string[]): T;
+
+  read(): void {
+    this.data = fs
+      .readFileSync(this.filename, {
+        encoding: 'utf-8',
+      })
+      .split('\n')
+      .map((row: string): string[] => {
+        return row.split(',');
+      })
+      .map(this.mapRow);
+  }
+}
+
+```
