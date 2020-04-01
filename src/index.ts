@@ -1,13 +1,8 @@
-import { CsvFileReader } from "./CsvFileReader";
+import { CsvFileReader } from './CsvFileReader';
+import { MatchResults } from './matchResult';
 
 const reader = new CsvFileReader('epl_2018_19.csv');
 reader.read();
-
-enum MatchResults {
-  HomeWin = 'H',
-  AwayWin = 'A',
-  Draw = 'D'
-}
 
 let checlseaWins: number = 0;
 
