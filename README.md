@@ -101,3 +101,32 @@ reader.read();
 That's what this section of the commit does.
 
 With this improvement, if we decide to use an external data, we could only comment out/delete just `2 lines of code` to implement an external query.
+
+### A Look into our parsed data
+
+When we look at the format of our data we'd notice that we have different data sets which currently we're parsing all as string.
+
+`18/08/2018,Chelsea,Arsenal,3,2,H,M Atkinson`
+
+The structure is as above. The first data is a `Date`, next 2 data sets are `strings` while the next two are `integers` and the next one is of type `MatchResult` that could either be `H`, `A` or `D` and the last data type is a `string`.
+
+We should be able to parse these data sets (types) as they are for easy use and future relief against much work. Essense of a well designed software: solve users problem now and always with minimal work for extension.
+
+So, we want a data set that's well represented. `Tuple` is the best data type we can employ in this scenario.
+
+We can thus have something in the line:
+
+```ts
+const MatchData = [
+  Date,
+  string,
+  string,
+  number,
+  number,
+  Matchresult,
+  string
+]
+
+```
+
+Let's figure this out in this commit and make a `utility function` to help with date parsing.
