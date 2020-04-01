@@ -130,3 +130,41 @@ const MatchData = [
 ```
 
 Let's figure this out in this commit and make a `utility function` to help with date parsing.
+
+With these refactor our `index.ts` file becomes more relieved and rasy to understand while we have been able to share responsibility across different departments in our project.
+
+### CsvFileReader is No Longer Reusable
+
+Did you notice that?
+
+The `CsvFileReader` is no longer **reusable** at this stage with the present implementation. The current implementation assumes we know, before hand, the sstructure of the data we are reading (parsing) which makes it not so reusable but too custom to the situation at hand.
+
+What if we have a file of movies?
+
+The newly implemented `MatchData` _will not_ work for such a case...no match wins, home and away teams. Lol!
+
+```ts
+...
+.map((row: string[]): MatchData => {
+  return [
+    dateStringToDate(row[0]),
+    row[1],
+    row[2],
+    parseInt(row[3]),
+    parseInt(row[4]),
+    row[5] as MatchResults,
+    row[6]
+  ]
+})
+...
+```
+
+So, there's another problem that needs to be looked into.
+
+### A way out
+
+What we could do is to make `CsvFileReader` into an **abstract class** with a method `mapRow()` that implements the last customization. The actual implementation could then be extracted into isolation so that it's sole responsibility is to be aware of the structure of the data to be parsed.
+
+This means `CsvFileReader` will not need to worry about that part of the implementation again! Ooops! Better. Think we are getting somewhere.
+
+Let's work on that.
