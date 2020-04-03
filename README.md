@@ -253,3 +253,93 @@ export abstract class CsvFileReader<T> {
 ```
 
 The whole of the abstract method is using **Inheritance**.
+
+## Just another approach - Interface Based (Composition)
+
+The `CsvFileReader.ts` and `MatchReader.ts` has been moved into a new directory named `inheritance` - why not? That's the name of the approach used.
+
+We want to journey into yet another approach. It involves using `interfaces`. An approach called **Composition** as opposed to **Inheritance**. There's no time to get into the debate, we just want to learn to see for ourselves which is better in _this_ our scenario.
+
+Our earlier `CsvFileReader` that was made a backup (`.bak`) file is going to be our starting point for this refactor.
+
+After a quick little refactor of `CsvFileReader.ts` (the old .bak file), we got this generic _reusable_ `CsvFileReader` that neither has nothing to do with the file we are reading from nor all of its conversion.
+
+```ts
+import fs from 'fs';
+
+export class CsvFileReader {
+  data: string[][] = [];
+
+  constructor(public filename: string) {}
+
+  read(): void {
+    this.data = fs
+      .readFileSync(this.filename, {
+        encoding: 'utf-8',
+      })
+      .split('\n')
+      .map((row: string): string[] => {
+        return row.split(',');
+      })
+  }
+}
+
+```
+
+Now we have a `MatchReader` that expects its argument to satisfy an interface, `DataReader`, which in this case is a `CsvFileReader` and could be any other type of reader say `APIReader`. It only need satisfy the inerface `DataReader` for it to work with the `MatchReader`.
+
+This is **Object Composition**.
+
+The `MatchReader` now looks...
+
+```ts
+...
+interface DataReader {
+  read(): void;
+  data: string[][];
+}
+
+export class MatchReader {
+  matches: MatchData[] = [];
+
+  constructor(public reader: DataReader) {}
+
+  load(): void {
+    this.reader.read();
+    this.matches = this.reader.data.map((row: string[]): MatchData => {
+      return [
+        dateStringToDate(row[0]),
+        row[1],
+        row[2],
+        parseInt(row[3]),
+        parseInt(row[4]),
+        row[5] as MatchResults,
+        row[6],
+      ];
+    })
+  }
+}
+
+```
+
+And now we simply do the following in `index.ts` to get to use our data again:
+
+```ts
+...
+// Create an object that satisfies the DataReader interface
+const csvFileReader = new CsvFileReader('epl_2018_19.csv');
+
+// Create an instance of MatchReader and pass in something satisfying
+// the DataReader interface
+const matchReader = new MatchReader(csvFileReader);
+
+// Call the load method to populate the matches property of the reader
+matchReader.load();
+...
+```
+
+We've done a great deal of refactor and now we still have some problem on our hands.
+
+Our analysis is static. Can only read **Chelsea FC** win records...may be because I am a Chelsea fan 😎. But honestly, if we need get data for other clubs, we'll need repeat the lines in the `index.ts` several times to achieve this and we may need deleting some when our file gets cluttered that it may now be too clumsy to manage.
+
+So, we are going to employ **Object Composition** to achieve our aim.
