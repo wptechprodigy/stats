@@ -5,9 +5,14 @@ export interface Analyzer {
 }
 
 export interface OutputTarget {
-  run(print: string): void;
+  print(report: string): void;
 }
 
 export class Summary {
   constructor(public analyzer: Analyzer, public outputTarget: OutputTarget) {}
+
+  buildAndPrintReport(matches: MatchData[]): void {
+    const analysisOutput = this.analyzer.run(matches);
+    this.outputTarget.print(analysisOutput);
+  }
 }
