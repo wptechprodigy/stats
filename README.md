@@ -343,3 +343,87 @@ We've done a great deal of refactor and now we still have some problem on our ha
 Our analysis is static. Can only read **Chelsea FC** win records...may be because I am a Chelsea fan 😎. But honestly, if we need get data for other clubs, we'll need repeat the lines in the `index.ts` several times to achieve this and we may need deleting some when our file gets cluttered that it may now be too clumsy to manage.
 
 So, we are going to employ **Object Composition** to achieve our aim.
+
+After adding analyzers and outputTargets as delegates for summary to delegate function to, we have been able to fully implement **Object Composition**.
+
+The `index.ts` file now add the following lines of code:
+
+```ts
+...
+
+const summary = new Summary(
+  new WinsAnalysis('Chelsea'),
+  new HTMLReport('analysisReport.html')
+);
+
+summary.buildAndPrintReport(matchReader.matches);
+
+```
+
+Well. This is a better implementation and of course a scalable implementation that could add more analyses and output targets.
+
+### One more gotcha
+
+With the current way of instantiation, we could implement **static** methods that could help conceal the hassles of having to create an instatiation each time and then calling on needed methods.
+
+The following snippet is added to `Summary.ts` to enable generating an HTML report with having to use the `new` keyword and direct call of the method without instatiation.
+
+```ts
+...
+static winsAnalysisWithHtmlReport(team: string): Summary {
+  return new Summary(
+    new WinsAnalysis(team),
+    new HTMLReport('analysisReport.html'),
+  );
+}
+...
+```
+
+and this for `Console` report:
+
+```ts
+...
+static winsAnalysisWithConsoleReport(team: string): Summary {
+  return new Summary(
+    new WinsAnalysis(team),
+    new ConsoleReport()
+  )
+}
+...
+```
+
+This is going to make a whole lot of improvement on our `index.ts` file as you'd see in a sec.
+
+And our `MatchReader` adds this static method as well:
+
+```ts
+...
+static fromSource(fileName: string): MatchReader {
+  return new MatchReader(new CsvFileReader(fileName));
+}
+...
+```
+
+So, our new `index.ts` looks:
+
+```ts
+import { MatchReader } from './MatchReader';
+import { Summary } from './Summary';
+
+const matchReader = MatchReader.fromSource('epl_2018_19.csv');
+const summary = Summary.winsAnalysisWithConsoleReport('Arsenal');
+// const summary = Summary.winsAnalysisWithHtmlReport('Man United');
+
+// Call the load method to populate the matches property of the reader
+matchReader.load();
+summary.buildAndPrintReport(matchReader.matches);
+
+```
+
+Pretty. Right?
+
+Well...thanks for coming along on this journey. It's been a great learning journey. Learning some cool stuff using **Typescript** - **Inheritance**, **abstract classes**, **interfaces**, **Composition** and some other **OOP** practices, even though they seem subtle in implementation.
+
+## Credits
+
+This is a great journey with [Stephen Grider](https://github.com/StephenGrider) a great teacher. You can tweet at him [here](https://twitter.com/ste_grider?lang=en). This is my understanding of this part of the training on Typescript.
