@@ -1,6 +1,6 @@
 # Stats for English Premier League 2018/19 Season
 
-A NodeJS + Typescript project to read, parse, analyse and make a report of a csv file of the EPL 2018/19 football (soccer) season.
+A NodeJS + Typescript project to read, parse, analyse and make a report off a csv file of the English Premier League 2018/19 football (soccer) season.
 
 Not sure yet if the report will be presented on a UI but we'll find out.
 
